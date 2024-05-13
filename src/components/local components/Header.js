@@ -1,4 +1,3 @@
-import { IconContext } from "react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { AiOutlineUser } from "react-icons/ai";
@@ -7,7 +6,7 @@ const categories = ["CLOTHING", "ACCESSORIES", "BAGS", "TECH"];
 
 export default function Header() {
   return (
-    <div className="h-auto">
+    <div className="flex-none">
       <TopHeader />
       <BulkHeader />
     </div>
@@ -41,15 +40,15 @@ function TopHeader() {
 
 function BulkHeader() {
   return (
-    <div className="h-[90px] w-auto bg-primary drop-shadow-md overflow-hidden flex flex-row content-center relative">
-      <div className="flex mx-5 absolute top-2">
+    <div className="h-[90px] w-auto bg-primary drop-shadow-md overflow-hidden flex flex-col content-center lg:flex-row lg:relative">
+      <div className="flex mx-5 max-lg:mt-2 max-lg:justify-center lg:absolute lg:top-2">
         <button>
-          <h1 className="text-9xl font-logo text-[71px] leading-none text-secondary-darker">
+          <h1 className="font-logo text-[40px] leading-none text-secondary-darker lg:text-[71px]">
             Buyee
           </h1>
         </button>
       </div>
-      <div className="max-h-min w-screen flex justify-between mx-[350px] items-end">
+      <div className="max-h-min w-screen flex justify-around items-end lg:justify-between lg:mx-[350px]">
         {categories.map((category) => (
           <CategoryButton title={category} />
         ))}
@@ -60,7 +59,7 @@ function BulkHeader() {
 
 function CategoryButton({ title }) {
   return (
-    <button className="font-primary text-categories h-fit mx-5 text-secondary-darker">
+    <button className="font-primary text-categories h-fit mx-1 text-secondary-darker lg:mx-5">
       {title}
     </button>
   );
