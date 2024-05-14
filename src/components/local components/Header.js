@@ -7,7 +7,7 @@ const categories = ["CLOTHING", "ACCESSORIES", "BAGS", "TECH"];
 
 export default function Header() {
   return (
-    <div className="h-auto">
+    <div className="h-auto sm">
       <TopHeader />
       <BulkHeader />
     </div>
