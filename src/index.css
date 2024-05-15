@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .side-fade {
+    mask-image: linear-gradient(
+      transparent 0%,
+      black 40% 60%,
+      black transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to left,
+      transparent 0%,
+      black 40% 60%,
+      transparent 100%
+    );
+  }
+
+  .text-shadow-mobile {
+    text-shadow: 1px 2px 10px black;
+  }
+  .text-shadow-desktop {
+    text-shadow: 1px 2px 5px black;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 98%;
@@ -37,7 +60,7 @@
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --ring: 217 0% 77%;
 
     --radius: 0.5rem;
   }
