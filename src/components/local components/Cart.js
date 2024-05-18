@@ -1,14 +1,13 @@
 import Divider from "./Divider";
 import { MdOutlineRemoveShoppingCart } from "react-icons/md";
 import { Button } from "../ui/button";
+import PageBody from "./PageBody";
+import PageLabel from "./PageLabel";
 
 export default function Cart() {
   return (
-    <div className="flex flex-col grow">
-      <h1 className="font-primary text-[81px] mx-3 flex-none lg:text-[120px] lg:leading-tight">
-        My Cart.
-      </h1>
-      <Divider />
+    <PageBody className="grow">
+      <PageLabel>My Cart.</PageLabel>
       <div className="lg:flex lg:flex-row lg:justify-between">
         <div className="lg:grow">
           <Product />
@@ -26,7 +25,7 @@ export default function Cart() {
           Continue Shopping
         </Button>
       </div> */}
-    </div>
+    </PageBody>
   );
 }
 
@@ -63,7 +62,9 @@ function Summary() {
   return (
     <div className="flex flex-col justify-between m-3 grow lg:w-[350px] lg:flex-none lg:bg-white lg:p-5 lg:drop-shadow-xl lg:rounded-2xl">
       <div className="mb-2">
-        <p className="font-primary text-[30px] lg:text-center">Order Summary</p>
+        <p className="font-primary text-[30px] lg:text-center lg:text-[35px] lg:mb-5">
+          Order Summary
+        </p>
         <SpreadText label="Total items:" value="2" />
         <SpreadText label="Subtotal:" value="$44.6" />
         <SpreadText label="Order Total:" value="$44.6" />

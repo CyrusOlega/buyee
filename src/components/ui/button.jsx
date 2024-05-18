@@ -17,14 +17,15 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-white shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        invisible: "bg-transparent",
       },
       size: {
         default: "h-9 px-4 py-2 w-80",
         defaultResponsive: "h-9 px-4 py-2 w-80 lg:w-[500px]",
-        // auto: "h-6 w-inherit",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        tight: "w-fit p-1 m-1",
       },
     },
     defaultVariants: {
