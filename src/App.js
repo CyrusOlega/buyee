@@ -8,11 +8,15 @@ import Terms from "./components/local components/Terms";
 import About from "./components/local components/About";
 import CategoryPage from "./components/local components/CategoryPage";
 import { Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import SearchPage from "./components/local components/SearchPage";
+import { Toaster } from "./components/ui/toaster";
+
+export const CartContext = createContext();
 
 function App() {
   const [shopResponse, setShopResponse] = useState("");
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const fetchShopData = async () => {
@@ -27,35 +31,64 @@ function App() {
     fetchShopData();
   }, []);
 
+  const addToCart = (item, quantity) => {
+    item.quantity = parseInt(quantity);
+
+    if (!cartItems.some((ct) => ct.id === item.id)) {
+      setCartItems((cartItems) => [...cartItems, item]);
+    } else {
+      setCartItems((cartItems) =>
+        cartItems.map((ct) =>
+          ct.id === item.id ? { ...ct, quantity: parseInt(quantity) } : ct
+        )
+      );
+    }
+  };
+
+  const removeFromCart = (id) => {
+    setCartItems((cartItems) => cartItems.filter((ct) => ct.id !== id));
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home shopResponse={shopResponse} />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route
-          path="/men's clothing"
-          element={<CategoryPage category="Men's Clothing" />}
-        />
-        <Route
-          path="/women's clothing"
-          element={<CategoryPage category="Women's Clothing" />}
-        />
-        <Route
-          path="/jewelery"
-          element={<CategoryPage category="Jewelery" />}
-        />
-        <Route
-          path="/electronics"
-          element={<CategoryPage category="Electronics" />}
-        />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/*" element={<Error />} />
-        {/* <Cart /> */}
-        {/* <Home /> */}
-        {/* <CategoryPage /> */}
-      </Routes>
-    </div>
+    <CartContext.Provider value={cartItems}>
+      <div className="flex flex-col h-screen bg-background">
+        <Header />
+        <Toaster />
+        <Routes>
+          <Route path="/" element={<Home shopResponse={shopResponse} />} />
+          <Route
+            path="/cart"
+            element={
+              <Cart addToCart={addToCart} removeFromCart={removeFromCart} />
+            }
+          />
+          <Route
+            path="/men's clothing"
+            element={<CategoryPage category="Men's Clothing" />}
+          />
+          <Route
+            path="/women's clothing"
+            element={<CategoryPage category="Women's Clothing" />}
+          />
+          <Route
+            path="/jewelery"
+            element={<CategoryPage category="Jewelery" />}
+          />
+          <Route
+            path="/electronics"
+            element={<CategoryPage category="Electronics" />}
+          />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route
+            path="/product/:id"
+            element={<Details addToCart={addToCart} />}
+          />
+          <Route path="/*" element={<Error />} />
+        </Routes>
+      </div>
+    </CartContext.Provider>
   );
 }
 

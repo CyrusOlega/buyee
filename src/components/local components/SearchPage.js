@@ -2,16 +2,10 @@ import PageLabel from "./PageLabel";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import PageBody from "./PageBody";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
+import ProductCard from "./ProductCard";
 
 export default function SearchPage() {
   const [shopResponse, setShopResponse] = useState("");
@@ -112,29 +106,9 @@ export default function SearchPage() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {queryResult &&
           queryResult.map((result, index) => (
-            <ProductItem key={index} info={result} />
+            <ProductCard key={index} info={result} />
           ))}
       </div>
     </PageBody>
-  );
-}
-
-function ProductItem({ info }) {
-  return (
-    <Card className="max-w-[250px]">
-      <Link to="/" className="h-full flex flex-col">
-        <CardContent className="flex grow items-center justify-center h-[70%] px-2 pb-0 md:px-6">
-          <img src={info.image} alt="" className="max-h-full p-2"></img>
-        </CardContent>
-        <CardHeader className="pt-0">
-          <CardTitle className="font-secondary text-[13px] text-center font-semibold md:text-[16px]">
-            {info.title}
-          </CardTitle>
-        </CardHeader>
-        <CardFooter className="font-secondary font-semibold text-[15px] justify-center p-1 pt-0 md:text-[20px]">
-          {"$" + info.price}
-        </CardFooter>
-      </Link>
-    </Card>
   );
 }

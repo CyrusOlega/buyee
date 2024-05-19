@@ -11,6 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 import PageBody from "./PageBody";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ProductCard from "./ProductCard";
 
 export default function Home({ shopResponse }) {
   const [bannerImage, setBannerResponse] = useState("");
@@ -41,7 +42,7 @@ export default function Home({ shopResponse }) {
           <CarouselContent>
             {shopResponse &&
               shopResponse.map((res, index) => (
-                <CarouselItemsingle key={index} image={res.image} />
+                <CarouselItemsingle key={index} res={res} />
               ))}
           </CarouselContent>
           <CarouselPrevious />
@@ -74,18 +75,28 @@ function Banner({ bannerResponse }) {
           <span className="font-secondary text-white text-[30px] text-shadow-mobile md:text-[60px] text-shadow-desktop">
             It's your choice.
           </span>
+          <div className="flex flex-row font-secondary text-shadow-mobile text-white">
+            <Link to="/about" className="mr-10">
+              <span>About Us</span>
+            </Link>
+            <Link to="/terms">
+              <span>Terms</span>
+            </Link>
+          </div>
         </div>
       </form>
     </div>
   );
 }
 
-function CarouselItemsingle({ image }) {
+function CarouselItemsingle({ res }) {
   return (
     <CarouselItem className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-      <Card className="flex justify-center items-center h-[320px] w-[280px]">
-        <img src={image} alt="" className="max-h-full p-5"></img>
-      </Card>
+      <Link to={"/product/" + res.id}>
+        <Card className="flex justify-center items-center h-[320px] w-[280px]">
+          <img src={res.image} alt="" className="max-h-full p-5"></img>
+        </Card>
+      </Link>
     </CarouselItem>
   );
 }

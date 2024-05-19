@@ -1,46 +1,92 @@
-import { Card } from "../ui/card";
-import { VscStarFull } from "react-icons/vsc";
 import { Button } from "../ui/button";
+import PageBody from "./PageBody";
+import Ratings from "./Ratings";
+import { Input } from "../ui/input";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { CartContext } from "../../App";
+import { useToast } from "../ui/use-toast";
 
-function Details() {
-    return (
-        <>
-        <div className="lg:flex lg:flex-row lg:justify-between mx-20 my-10">
-        <div className="flex flex-row mx-10 h-[35%] lg:h-[70%]">
-          <img
-            src="https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
-            alt=""
-            className="lg:h-full lg:p-5 lg:my-0 h-[500px] my-20"
-          ></img>
+function Details({ addToCart }) {
+  const [item, setItem] = useState("");
+  const { id } = useParams();
+  const [quantity, setQuantity] = useState("1");
+  const cartItems = useContext(CartContext);
+  const [addedToCart, setItemState] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchItem = async () => {
+      let data = await fetch("https://fakestoreapi.com/products/" + id).then(
+        (res) => res.json()
+      );
+
+      setItem(data);
+    };
+
+    fetchItem();
+
+    if (cartItems.some((ct) => ct.id === parseInt(id))) {
+      setItemState(true);
+      setQuantity(cartItems.filter((ct) => ct.id === parseInt(id))[0].quantity);
+    }
+  }, []);
+
+  return (
+    <PageBody className="pt-10">
+      <div className="flex flex-col justify-center items-center h-[300px] lg:h-[70%]">
+        <img
+          src={item.image}
+          alt=""
+          className="h-full lg:h-full lg:p-5 lg:my-0"
+        ></img>
+      </div>
+      <div className="justify-end">
+        <div className="flex flex-col items-center justify-center mt-5 mb-6">
+          <p className="text-product font-primary text-center leading-none">
+            {item.title}
+          </p>
+
+          {item && <Ratings score={Math.round(item.rating.rate)} />}
         </div>
-        <div className="my-10 mx-10 justify-end">
-            <p class="text-product font-primary ">Mens Casual Premium Slim Fits T-Shirt</p>
-            <div class="text-product flex">
-            <VscStarFull color="yellow"/>
-            <VscStarFull color="yellow"/>
-            <VscStarFull color="yellow"/>
-            <VscStarFull color="yellow"/>
-            <VscStarFull color="yellow"/>
-            </div>
-            <p class="text-product"><span>$22.3</span></p>
-            <br/>
-            <p class="font-secondary"><span>Great outerwear jackets for Spring/Autumn/Winter, suitable for many</span></p>
-            <p class="font-secondary"><span>ocassions such as working, hiking, camping, mountain/rock</span></p>
-            <p class="font-secondary"><span>climbing, cycling, traveling or other outdoors. Good gift choice for</span></p>
-            <p class="font-secondary"><span>you or your family member. A warm hearted love to Father, husband</span></p>
-            <p class="font-secondary"><span>or son this thanksgiving or Christmas Day.</span></p>
-
-            <br/><br/><br/><br/>
-
-            <p class="text-categories font-primary">Quantity: 1</p>
-            <div className="flex flex-col gap-2">
-        <Button className="w-auto">ADD TO CART</Button>
-
+        <div className="flex flex-col">
+          <span>{item.description}</span>
+          {item && (
+            <p className="text-[40px] font-primary">{"$" + item.price}</p>
+          )}
+          <div className="mb-10">
+            <p className="font-primary text-[40px]">Quantity:</p>
+            <Input
+              min="1"
+              className="w-[50px] bg-white drop-shadow-sm"
+              type="number"
+              onChange={(e) => setQuantity(e.target.value)}
+              value={quantity}
+            />
+          </div>
         </div>
-        </div>
-        </div>
-        </>
-    );
-  }
 
-  export default Details;
+        <div className="flex flex-col gap-2">
+          <form
+            className="w-full"
+            onSubmit={(e) => {
+              e.preventDefault();
+              addToCart(item, e.target[1].value);
+            }}
+          >
+            <Button
+              className="w-full"
+              type="submit"
+              onClick={() => toast({ description: "Added item!" })}
+            >
+              {addedToCart ? <>Update cart</> : <>Add to cart</>}
+            </Button>
+            <input type="hidden" value={quantity} id="quantity" />
+          </form>
+        </div>
+      </div>
+    </PageBody>
+  );
+}
+
+export default Details;
