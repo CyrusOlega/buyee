@@ -9,37 +9,32 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 
-export default function CategoryPage({ category }) {
+export default function SearchPage() {
   const [shopResponse, setShopResponse] = useState("");
   const [sortType, setSortType] = useState("Name");
   const [query, setQuery] = useState("");
   const [queryResult, setQueryResult] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setSortType("Name");
-    setQueryResult("");
-    setQuery("");
-    setShopResponse("");
-
     const fetchShopData = async () => {
       let data = await fetch("https://fakestoreapi.com/products").then((res) =>
         res.json()
       );
 
-      let filteredData = data.filter(
-        (d) => d.category === category.toLowerCase()
-      );
-      console.log(filteredData);
-
-      setShopResponse(filteredData);
+      setShopResponse(data);
     };
 
+    if (searchParams.size > 0) {
+      setQuery(searchParams.get("query"));
+    }
+
     fetchShopData();
-  }, [category]);
+  }, []);
 
   useEffect(() => {
     var newItems = [...shopResponse];
@@ -56,18 +51,35 @@ export default function CategoryPage({ category }) {
     setShopResponse(filteredData);
   }, [sortType]);
 
-  const searchItems = (e) => {
-    e.preventDefault();
-    var searchedItems = [...shopResponse];
-    // console.log(searchedItems[1].title.toLowerCase());
-    // console.log(e.target[0].value.toLowerCase());
+  useEffect(() => {
+    var responseCopy = [...shopResponse];
+    console.log(searchParams);
 
-    setQueryResult(
-      searchedItems.filter((item) =>
-        item.title.toLowerCase().includes(e.target[0].value.toLowerCase())
-      )
-    );
-  };
+    if (searchParams.size > 0) {
+      setQueryResult(
+        responseCopy.filter((item) =>
+          item.title
+            .toLowerCase()
+            .includes(searchParams.get("query").toLowerCase())
+        )
+      );
+    }
+  }, [shopResponse]);
+
+  useEffect(() => {
+    var responseCopy = [...shopResponse];
+    console.log(searchParams);
+
+    if (searchParams.size > 0) {
+      setQueryResult(
+        responseCopy.filter((item) =>
+          item.title
+            .toLowerCase()
+            .includes(searchParams.get("query").toLowerCase())
+        )
+      );
+    }
+  }, [searchParams]);
 
   return (
     <PageBody>
@@ -76,9 +88,15 @@ export default function CategoryPage({ category }) {
         setSortType={setSortType}
         type="withDropdown"
       >
-        {category + "."}
+        Search.
       </PageLabel>
-      <form classname="" onSubmit={(e) => searchItems(e)}>
+      <form
+        className=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSearchParams({ query: e.target[0].value });
+        }}
+      >
         <div className="flex flex-row justify-center items-center my-3 max-w-[700px] font-secondary">
           <Input
             onChange={(e) => setQuery(e.target.value)}
@@ -92,14 +110,10 @@ export default function CategoryPage({ category }) {
         </div>
       </form>
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {queryResult !== ""
-          ? queryResult.map((result, index) => (
-              <ProductItem key={index} info={result} />
-            ))
-          : shopResponse &&
-            shopResponse.map((d, index) => (
-              <ProductItem key={index} info={d} />
-            ))}
+        {queryResult &&
+          queryResult.map((result, index) => (
+            <ProductItem key={index} info={result} />
+          ))}
       </div>
     </PageBody>
   );

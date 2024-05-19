@@ -1,8 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { AiOutlineUser } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
-const categories = ["CLOTHING", "ACCESSORIES", "BAGS", "TECH"];
+const categories = [
+  "MEN'S CLOTHING",
+  "WOMEN'S CLOTHING",
+  "JEWELERY",
+  "ELECTRONICS",
+];
 
 export default function Header() {
   return (
@@ -17,14 +23,14 @@ function TopHeader() {
   return (
     <div className="h-[45px] w-auto bg-secondary flex justify-end">
       <div className="flex flex-row h-full w-fit items-center justify-between">
-        <button className="bg-transparent ml-5">
+        <Link className="bg-transparent ml-5" to="/cart">
           <Avatar className="size-8">
             <AvatarImage src="" alt="" />
             <AvatarFallback>
               <MdOutlineShoppingCart />
             </AvatarFallback>
           </Avatar>
-        </button>
+        </Link>
         <button className="bg-transparent mx-5">
           <Avatar className="size-8">
             <AvatarImage src="" alt="" />
@@ -41,16 +47,16 @@ function TopHeader() {
 function BulkHeader() {
   return (
     <div className="h-[90px] w-auto bg-primary drop-shadow-md overflow-hidden flex flex-col content-center lg:flex-row lg:relative">
-      <div className="flex mx-5 max-lg:mt-2 max-lg:justify-center lg:absolute lg:top-2">
-        <button>
+      <div className="grow flex mx-5 max-lg:mt-2 max-lg:justify-center lg:absolute lg:top-2">
+        <Link to="/">
           <h1 className="font-logo text-[40px] leading-none text-secondary-darker lg:text-[71px]">
             Buyee
           </h1>
-        </button>
+        </Link>
       </div>
-      <div className="max-h-min w-screen flex justify-around items-end lg:justify-between lg:mx-[350px]">
-        {categories.map((category) => (
-          <CategoryButton title={category} />
+      <div className="max-h-min w-screen flex justify-around items-end lg:justify-between lg:mx-[20%]">
+        {categories.map((category, index) => (
+          <CategoryButton title={category} key={index} />
         ))}
       </div>
     </div>
@@ -59,8 +65,11 @@ function BulkHeader() {
 
 function CategoryButton({ title }) {
   return (
-    <button className="font-primary text-categories h-fit mx-1 text-secondary-darker lg:mx-5">
+    <Link
+      className="font-primary text-[22px] h-fit mx-1 text-secondary-darker lg:mx-2 lg:text-[30px]"
+      to={"/" + title.toLowerCase()}
+    >
       {title}
-    </button>
+    </Link>
   );
 }

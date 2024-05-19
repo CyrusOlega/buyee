@@ -9,15 +9,25 @@ import {
 import { Button } from "../ui/button";
 import { useState } from "react";
 
-export default function PageLabel({ children, className, type }) {
+export default function PageLabel({
+  children,
+  className,
+  type,
+  sortType,
+  setSortType,
+}) {
   return (
     <div className={cn(className)}>
       <div className="flex flex-row justify-between items-end">
-        <h1 className="font-primary text-[81px] flex-none lg:text-[120px] lg:leading-tight">
+        <h1 className="font-primary text-[81px] flex-none lg:text-[120px] lg:leading-tight w-[50%]">
           {children}
         </h1>
         {type === "withDropdown" && (
-          <DropdownBuilder options={["Name", "Price", "Ratings"]} />
+          <DropdownBuilder
+            sortType={sortType}
+            setSortType={setSortType}
+            options={["Name", "Price", "Ratings"]}
+          />
         )}
       </div>
       <Divider />
@@ -25,12 +35,10 @@ export default function PageLabel({ children, className, type }) {
   );
 }
 
-function DropdownBuilder({ options }) {
-  const [sortType, setSortType] = useState("Name");
-
+function DropdownBuilder({ options, sortType, setSortType }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button
           variant="invisible"
           size="tight"
@@ -43,8 +51,8 @@ function DropdownBuilder({ options }) {
         className="font-secondary font-semibold"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        {options.map((option) => (
-          <DropdownMenuItem onClick={() => setSortType(option)}>
+        {options.map((option, index) => (
+          <DropdownMenuItem key={index} onClick={() => setSortType(option)}>
             {option}
           </DropdownMenuItem>
         ))}
