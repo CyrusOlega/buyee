@@ -18,6 +18,7 @@ module.exports = {
     },
     fontSize: {
       categories: "30px",
+      product: "50px",
     },
     extend: {
       colors: {
